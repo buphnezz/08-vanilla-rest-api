@@ -16,7 +16,6 @@ const memory = {};
 //    }
 //  }
 
-
 // schema is the type of resource, in this case NOTE, and it will just be a 'string' 
 // saying this is a note schema item is an actual object we'll pass in to post a newly created note
 storage.create = function create(schema, item) {
@@ -45,14 +44,34 @@ storage.fetchOne = function fetchOne(schema, id) {
   });
 };
 
-storage.fetchAll = function fetchAll() {
+storage.fetchAll = function fetchAll(schema) {
+  return new Promise((resolve, reject) => {
+    if (!schema) return reject(new Error('expected schema name'));
+    if (!id) return reject(new Error('expected id'));
+    if (!memory[schema]) return reject(new Error('schema not found'));
 
-};
+    const allIds = Object.keys(memory[schema]);
+    const notes = allIds.map(id => memory[id]);
+    
+    if(!notes) {
+      return reject(new Error('object not found'));
+    }
+    return resolve(notes);
+});
 
-storage.update = function update() {
+  storage.delete = function del(schema, id) {
+    return new Promise((resolve, reject) => {
+      if (!schema) return reject(new Error('expected schema name'));
+      if (!id) return reject(new Error('expected id'));
+      if (!memory[schema]) return reject(new Error('schema not found'));
 
-};
+      memory[schema] = {};
+      memory[schema][item.id] = item;
 
-storage.delete = function del() {
+      if (!item) {
+        return reject(new Error('item not found'));
+      }
 
-};
+      return resolve();
+    });
+  };
