@@ -13,7 +13,7 @@ afterAll(() => server.stop());
 // In this lab, you MUST post first BEFORE you get
 describe('VALID request to the API', () => {
   describe('POST /api/v1/note', () => {
-    it('should respond with status 201 and create a new note', () => {
+    it('should respond with status 201 and created a new note', () => {
       return superagent.post(`:${testPort}/api/v1/note`)
         .send(mockResource)
         .then((res) => {
@@ -26,13 +26,53 @@ describe('VALID request to the API', () => {
   });
 
   describe('GET /api/v1/note', () => {
-    it('should respond with the a previously created note', () => {
+    it('should respond with the previously created note', () => {
       // console.log(mockId, 'MOCK ID IN GET BLOCK')
       return superagent.get(`:${testPort}/api/v1/note?id=${mockId}`)
         .then((res) => {
           expect(res.body.title).toEqual(mockResource.title);
           expect(res.body.content).toEqual(mockResource.content);
           expect(res.status).toEqual(200);
+        });
+    });
+  });
+});
+
+describe('INVALID request to the API', () => {
+  describe('GET /api/v1/note', () => {
+    it('it should respond with bad request if no request body was provided or the body was invalid', () => {
+      return superagent.get(':5000/cowsayPage')
+        .then(() => { })
+        .catch((err) => {
+          expect(err.status).toEqual(404);
+          expect(err).toBeTruthy();
+        });
+    });
+    it(' should respond with not found for valid requests made with an id that was not found', () => {
+      return superagent.get(`:${testPort}/api/v1/note?id=77`)
+        .query({})
+        .catch((err) => {
+          expect(err.status).toEqual(404);
+          expect(err).toBeTruthy();
+        });
+    });
+    it('should respond with bad request if no id was provided in the request', () => {
+      return superagent.get(`:${testPort}/api/v1/note?id=`)
+        .query({})
+        .then(() => { })
+        .catch((err) => {
+          expect(err.status).toEqual(400);
+          expect(err).toBeTruthy();
+        });
+    });
+  });
+  describe('POST /api/v1/note', () => {
+    it('should err out with 400 when no route exists', () => {
+      return superagent.get(':5000/cowsayPage')
+        .query({})
+        .catch((err) => {
+          expect(err.status).toEqual(400);
+          expect(err).toBeTruthy();
         });
     });
   });
