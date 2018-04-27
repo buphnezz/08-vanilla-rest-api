@@ -10,7 +10,6 @@ let mockId = null;
 beforeAll(() => server.start(testPort));
 afterAll(() => server.stop());
 
-// In this lab, you MUST post first BEFORE you get
 describe('VALID request to the API', () => {
   describe('POST /api/v1/note', () => {
     it('should respond with status 201 and created a new note', () => {
@@ -27,7 +26,6 @@ describe('VALID request to the API', () => {
 
   describe('GET /api/v1/note', () => {
     it('should respond with the previously created note', () => {
-      // console.log(mockId, 'MOCK ID IN GET BLOCK')
       return superagent.get(`:${testPort}/api/v1/note?id=${mockId}`)
         .then((res) => {
           expect(res.body.title).toEqual(mockResource.title);
@@ -42,6 +40,7 @@ describe('INVALID request to the API', () => {
   describe('GET /api/v1/note', () => {
     it('it should respond with bad request if no request body was provided or the body was invalid', () => {
       return superagent.get(':5000/cowsayPage')
+
         .then(() => { })
         .catch((err) => {
           expect(err.status).toEqual(404);
@@ -67,8 +66,8 @@ describe('INVALID request to the API', () => {
     });
   });
   describe('POST /api/v1/note', () => {
-    it('should err out with 400 when no route exists', () => {
-      return superagent.get(':5000/cowsayPage')
+    it('should err out with 400 when no body exists', () => {
+      return superagent.get(`:${testPort}/api/v1/note?id=${mockId}`)
         .query({})
         .catch((err) => {
           expect(err.status).toEqual(400);
