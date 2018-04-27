@@ -6,7 +6,7 @@ const http = require('http');
 const Router = require('./router');
 
 const router = new Router();
-require('../route/note-route')(router);
+require('../route/dinosaur-route')(router);
 // const logger = require('./logger');
 
 // Application setup

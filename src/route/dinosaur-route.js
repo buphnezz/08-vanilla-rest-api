@@ -1,23 +1,23 @@
 'use strict';
 
 const logger = require('../lib/logger');
-const Note = require('../model/note');
+const Dinosaur = require('../model/dinosaur');
 const storage = require('../lib/storage');
 
-module.exports = function routeNote(router) {
-  router.post('/api/v1/note', (req, res) => {
-    logger.log(logger.INFO, 'NOTE-ROUTE: POST /api/v1/note');
+module.exports = function routeDinosaur(router) {
+  router.post('/api/v1/dinosaur', (req, res) => {
+    logger.log(logger.INFO, 'DINOSAUR-ROUTE: POST /api/v1/dinosaur');
     try {
-      const newNote = new Note(req.body.title, req.body.content);
-      storage.create('Note', newNote)
-        .then((note) => {
+      const newDinosaur = new Dinosaur(req.body.title, req.body.content);
+      storage.create('Dinosaur', newDinosaur)
+        .then((dinosaur) => {
           res.writeHead(201, { 'Content-Type': 'application/json' });
-          res.write(JSON.stringify(note));
+          res.write(JSON.stringify(dinosaur));
           res.end();
           return undefined;
         });
     } catch (err) {
-      logger.log(logger.ERROR, `NOTE-ROUTE: There was a bad request ${err}`);
+      logger.log(logger.ERROR, `DINOSAUR-ROUTE: There was a bad request ${err}`);
       res.writeHead(400, { 'Content-Type': 'text/plain' });
       res.write('Bad request');
       res.end();
@@ -25,9 +25,9 @@ module.exports = function routeNote(router) {
     }
     return undefined;
   });
-  router.get('/api/v1/note', (req, res) => {
+  router.get('/api/v1/dinosaur', (req, res) => {
     if (req.url.query.id) {
-      storage.fetchOne('Note', req.url.query.id)
+      storage.fetchOne('Dinosaur', req.url.query.id)
         .then((item) => {
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.write(JSON.stringify(item));
@@ -42,7 +42,7 @@ module.exports = function routeNote(router) {
           return undefined;
         });
     } else {
-      storage.fetchAll('Note')
+      storage.fetchAll('Dinosaur')
         .then((item) => {
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.write(JSON.stringify(item));
@@ -58,8 +58,8 @@ module.exports = function routeNote(router) {
         });
     }
   });
-  router.delete('/api/v1/note', (req, res) => {
-    storage.delete('Note', req.url.query.id)
+  router.delete('/api/v1/dinosaur', (req, res) => {
+    storage.delete('Dinosaur', req.url.query.id)
       .then(() => {
         res.writeHead(204, { 'Content-Type': 'text/plain' });
         res.write('No content in the body');

@@ -9,6 +9,6 @@ module.exports = class {
     this.title = title;
     this.content = content;
     this.id = uuid();
-    logger.log(logger.INFO, `NOTE: created a new note ${JSON.stringify(this)}`);
+    logger.log(logger.INFO, `NOTE: created a new dinosaur ${JSON.stringify(this)}`);
   }
 };
